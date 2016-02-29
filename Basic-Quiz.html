@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+<meta charset="utf-8"/>
+<title>World Monuments Quiz</title>
+<style>
+body{
+	font-family: Georgia, Helvetica, Arial;
+}
+	
+#wrapper {
+	width: 1000px;
+	height: 500px;
+	margin:auto;
+	background-color: lightBlue;
+	border: 3px solid gray;
+
+}
+
+#wrapper h1{
+	text-align: center;
+}
+
+#questions {
+	width:600px;
+	height:350px;
+	border: 3px solid gray;
+	background-color: white;
+	margin: auto;
+	visibility: hidden;
+}
+
+#start {
+	height: 50px;
+	width:100px;
+	margin-right: 20px;
+	font-size:15px;
+	float: right;
+	display: block;
+}
+
+#newTopic {
+	height: 50px;
+	width:100px;
+	float:right;
+	margin-right:20px;
+	font-size:15px;
+	display:none;
+
+}
+
+#topic {
+	text-align: center;
+}
+
+#image {
+	height:210px;
+	width:280px;
+	margin:20px auto 20px auto;
+}
+
+#pic {
+	width:280px;
+	height:210px;
+	border:1px solid black;
+
+}
+
+#nextQ{
+	float:right;
+	margin:10px;
+}
+
+#box{
+	width:100%;
+	text-align:center;
+	margin:0px;
+}
+
+#input {
+	margin:10px;
+}
+
+</style>
+<script src="HW3_Winter2016.js"></script>
+<script>
+var topic = "Monuments";
+
+
+var score = 0;   //to keep track of the users score
+var count = 0;
+var monumentCount= 0;  // a variable that increments through the Monument topics
+var questCount = 0;  //a variable that increments through the array indices
+
+
+function showQuestion(){	
+		// Randomly select a topic from the subject array
+		var m = Math.floor(Math.random()*5);
+		monumentCount = m;
+
+		// Get the image and display it
+		document.getElementById("pic").src = Monuments[m].image;
+		
+		// Change the title and button labels
+		// Display the question
+		// Make the display area of the image and question visible
+		document.getElementById("topic").style.visibility = "visible";
+		document.getElementById("questions").style.visibility = "visible";
+		document.getElementById("start").style.display = "none";
+		document.getElementById("newTopic").style.display = "block";
+
+		document.getElementById("topic").innerHTML = Monuments[m].name;
+		document.getElementById("text").innerHTML = Monuments[m].questions[0].quest;
+			
+}
+
+function nextQuestion(){
+	if (count == 16) {
+		var finalScore = (score/count)*100;
+		alert("Your final score is: " +finalScore+"%");
+	}
+
+	else if (questCount == 3){
+		alert("You have answered all of the questions about this monument! Click Next Question to move on to the next topic.")
+	}
+	else {
+		questCount++;
+		document.getElementById("text").innerHTML = Monuments[monumentCount].questions[questCount].quest;
+	}
+}
+
+function nextTopic() {
+	monumentCount++;
+	if(monumentCount == 4){
+		monumentCount = 0;
+		changeMonument(monumentCount);
+	}
+	else {
+		changeMonument(monumentCount);
+	}
+}
+
+
+function changeMonument(m) {
+	document.getElementById("pic").src = Monuments[monumentCount].image;
+	questCount = 0;
+	document.getElementById("text").innerHTML = Monuments[m].questions[0].quest;
+	document.getElementById("topic").innerHTML = Monuments[m].name;
+
+}
+
+function checkAnswer(){
+	count++;
+	var guess = document.getElementById("userGuess").value;
+	var input = guess.toLowerCase();  //change user's input to all lower case before comparing to correct answer
+	// Get the user input from the text field and compare it with the 
+	// correct answer in the data array
+	if (input == Monuments[monumentCount].questions[questCount].answer){
+		score++;  // increment the score each time the user's answer is correct
+		alert("Answer is correct! Your score is now " +score+"/"+count);
+	}
+	else { 
+		alert("Answer is incorrect.");
+	}
+}
+function registerHandlers(){
+	document.getElementById("start").onclick = showQuestion;
+	document.getElementById("questions").onchange = checkAnswer;
+	document.getElementById("nextQ").onclick = nextQuestion;
+	document.getElementById("newTopic").onclick = nextTopic;
+}
+
+</script>
+</head>
+<body onload="registerHandlers()">
+
+<div id="wrapper">
+<h2 id="topic"> World Monuments Quiz </h2>
+	<div id="questions">
+		<div id="image">
+			<img id="pic" src="" alt="monument image">
+		</div>
+
+		<div id="box">
+			<div id="text"> </div>
+			<input type="text" id="userGuess" placeholder="Type answer here">
+		</div>
+
+		<button id="nextQ" type="button">Next Question</button>
+	</div>  <!--end of the div for the questions-->
+
+	<button id="start" type="button">Start Quiz</button>
+	<button id="newTopic" type="button">Next Topic</button>
+
+</div>  <!--end of wrapper div-->
+
+</body>
+</html>
+
